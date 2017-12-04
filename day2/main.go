@@ -1,10 +1,11 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"io/ioutil"
 	"strings"
-	"bufio"
+	"strconv"
 )
 
 func getInput() string {
@@ -15,13 +16,31 @@ func getInput() string {
 }
 
 func getChecksum(input string) int {
-	var scanner = bufio.NewScanner(input)
+	var runningTotal = 0;
 
-	for scanner.Scan() {
-		fmt.Println(scanner.Text())
+	for _, line := range strings.Split(input, "\n") {
+		highest := 0
+		lowest := 99999999
+
+		scanner := bufio.NewScanner(strings.NewReader(line))
+		scanner.Split(bufio.ScanWords)
+
+		for scanner.Scan() {
+			val, _ := strconv.Atoi(scanner.Text())
+
+			if val > highest {
+				highest = val
+			}
+
+			if val < lowest {
+				lowest = val
+			}
+		}
+
+		runningTotal += highest - lowest
 	}
 
-	return 0;
+	return runningTotal
 }
 
 func main() {
@@ -29,5 +48,5 @@ func main() {
 
 	var checksum = getChecksum(input)
 
-	fmt.Sprintf("Checksum %d", checksum);
+	fmt.Printf("Checksum %d\n", checksum);
 }
