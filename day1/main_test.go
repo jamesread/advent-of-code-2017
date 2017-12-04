@@ -2,17 +2,23 @@ package main
 
 import "testing"
 
-func testCapcha(t *testing.T, expected int, captcha string) {
-	got := SolveCaptcha(captcha)
-
-	if got != expected {
-		t.Errorf("Failed to solve capcha. Expected %i, got %i, captcha %s", expected, got, captcha)
+func testCaptchaResult(t *testing.T, expected int, got *SolvedCaptcha) {
+	if expected != got.Result {
+		t.Errorf("Failed to solve capcha. Expected %d, got %d, captcha %s", expected, got.Result, got.Captcha)
 	}
 }
 
-func TestExample1(t *testing.T) {
-	testCapcha(t, 3, "1122")
-	testCapcha(t, 4, "1111")
-	testCapcha(t, 0, "1234")
-	testCapcha(t, 9, "91212129")
+func TestChecksumNextDigits(t *testing.T) {
+	testCaptchaResult(t, 3, SolveCaptchaNext("1122"))
+	testCaptchaResult(t, 4, SolveCaptchaNext("1111"))
+	testCaptchaResult(t, 0, SolveCaptchaNext("1234"))
+	testCaptchaResult(t, 9, SolveCaptchaNext("91212129"))
+}
+
+func TestChecksumHalfwayDigits(t *testing.T) {
+	testCaptchaResult(t, 6, SolveCaptchaHalfway("1212"))
+	testCaptchaResult(t, 0, SolveCaptchaHalfway("1221"))
+	testCaptchaResult(t, 4, SolveCaptchaHalfway("123425"))
+	testCaptchaResult(t, 12, SolveCaptchaHalfway("123123"))
+	testCaptchaResult(t, 4, SolveCaptchaHalfway("12131415"))
 }
