@@ -49,7 +49,7 @@ func serialize(bl []int) string {
 	return strings.Trim(strings.Join(strings.Fields(fmt.Sprint(bl)), "."), "[]")
 }
 
-var seenBanks = make(map[string]bool)
+var seenBanks = make(map[string]int)
 
 func isBalancePossible(bl []int) bool {
 	if _, ok := seenBanks[serialize(bl)]; ok {
@@ -91,19 +91,22 @@ func main() {
 	var contents = getInput()
 	var bl = getNumberList(contents)
 
+	var patternPosition = 0
 	var balanceAttempts = 0
 
 	fmt.Println("Starting bank definition:", bl);
 
 	for isBalancePossible(bl) {
-		seenBanks[serialize(bl)] = true
+		seenBanks[serialize(bl)] = patternPosition
 
 		var rebalancedIndex = rebalance(bl)
 		fmt.Println("Finished rebalancing bank", rebalancedIndex, "\t Bank List is now:", bl);
 
 		balanceAttempts++
+		patternPosition++
 	}
 
 	fmt.Println("Balance attempts:", balanceAttempts)
 	fmt.Println("Final Result:", bl)
+	fmt.Println("Cycles since the pattern was first seen:", len(seenBanks) - seenBanks[serialize(bl)]);
 }
