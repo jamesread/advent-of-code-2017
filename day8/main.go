@@ -28,6 +28,7 @@ type Statement struct {
 }
 
 var registers = make(map[string]int)
+var highestValue = 0
 
 type Condition int
 
@@ -122,6 +123,10 @@ func evaluateStatement(statement Statement) {
 			registers[statement.register] -= statement.changeValue
 		}
 	}
+
+	if registers[statement.register] > highestValue {
+		highestValue = registers[statement.register]
+	}
 }
 
 func findLargestRegister() string {
@@ -150,4 +155,5 @@ func main() {
 	var largestRegister = findLargestRegister()
 
 	log.Printf("The largest value in any register is %v with a value of %v\n", largestRegister, registers[largestRegister])
+	log.Printf("The highest value during the process was %v", highestValue)
 }
